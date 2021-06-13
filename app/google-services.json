@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "273989466576",
+    "firebase_url": "https://realtimedb-89157-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "realtimedb-89157",
+    "storage_bucket": "realtimedb-89157.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273989466576:android:4d58cee5f7c00a1c0fe1d5",
+        "android_client_info": {
+          "package_name": "com.example.chessball"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273989466576-slnvtoem7sf2bne1nnfa6487bp4trkii.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBReDF9I_ZQ8mURaRLp-SLvkabqTAWMCMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273989466576-slnvtoem7sf2bne1nnfa6487bp4trkii.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273989466576:android:bb8641984746e5fe0fe1d5",
+        "android_client_info": {
+          "package_name": "com.igorp.chessball"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273989466576-slnvtoem7sf2bne1nnfa6487bp4trkii.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBReDF9I_ZQ8mURaRLp-SLvkabqTAWMCMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273989466576-slnvtoem7sf2bne1nnfa6487bp4trkii.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273989466576:android:f2595fd2adaafcfe0fe1d5",
+        "android_client_info": {
+          "package_name": "com.igorp.footballchess"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273989466576-slnvtoem7sf2bne1nnfa6487bp4trkii.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBReDF9I_ZQ8mURaRLp-SLvkabqTAWMCMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273989466576-slnvtoem7sf2bne1nnfa6487bp4trkii.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
