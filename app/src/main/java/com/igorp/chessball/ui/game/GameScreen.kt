@@ -49,9 +49,7 @@ fun GameScreen(
 
     var clickedBox by remember { mutableStateOf(false) }
 
-    val listOfPlayersHost = produceState<List<Player>>(initialValue = listOf()) {
-        value = viewModel.getListOfPlayers(viewModel.myPreference.getGame()!!, isCompetitor1)
-    }.value
+    val listOfPlayersHost = viewModel.listOfPlayers.value
 
     val listOfPlayersGuest = viewModel.opponentPlayers.value
 
@@ -125,7 +123,16 @@ fun GameScreen(
                                 Icons.Default.PlayCircle,
                                 contentDescription = "Play",
                                 tint = Color.White,
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clickable {
+                                        ball?.competitor1Control?.let { it1 ->
+                                            viewModel.setTemporaryPlayers(listOfPlayersHost, it1)
+                                        }
+                                        ball?.let { it1 ->
+                                            viewModel.setTemporaryBall(it1)
+                                        }
+                                    }
                             )
                         }
                         2, 3, 4, 5, 6, 146, 147, 148, 149, 150 -> {
@@ -273,7 +280,7 @@ fun GameScreen(
                                         if(clickableBallEnabled) enabled = true
                                     }
                                     var ballColor = Color.Red
-                                    if(longBall) ballColor = Color.Blue
+                                    if(ball!!.inTheAir == true) ballColor = Color.Blue
                                     Icon(
                                         iconBall,
                                         contentDescription = "Ball",

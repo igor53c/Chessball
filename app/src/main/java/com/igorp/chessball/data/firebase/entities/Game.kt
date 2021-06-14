@@ -7,5 +7,6 @@ class Game (
     val name: String? = null,
     val competitor1: Competitor? = null,
     var competitor2: Competitor? = null,
-    val ball: Ball? = null
+    val ball: Ball? = null,
+    val ballTemporary: Ball? = null
 )

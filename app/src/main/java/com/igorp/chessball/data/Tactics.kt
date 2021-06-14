@@ -1,6 +1,5 @@
 package com.igorp.chessball.data
 
-import android.util.Log
 import com.igorp.chessball.data.firebase.entities.Field
 import com.igorp.chessball.data.firebase.entities.Player
 
@@ -13,32 +12,32 @@ object Tactics {
         var id = 0
         if(pos1) {
             position = getPosition1(
-                Character.getNumericValue(tactics.get(tactic).get(0)),
-                Character.getNumericValue(tactics.get(tactic).get(2)),
-                Character.getNumericValue(tactics.get(tactic).get(4))
+                Character.getNumericValue(tactics[tactic][0]),
+                Character.getNumericValue(tactics[tactic][2]),
+                Character.getNumericValue(tactics[tactic][4])
             )
         } else {
             id = 20
             position = getPosition2(
-                Character.getNumericValue(tactics.get(tactic).get(0)),
-                Character.getNumericValue(tactics.get(tactic).get(2)),
-                Character.getNumericValue(tactics.get(tactic).get(4))
+                Character.getNumericValue(tactics[tactic][0]),
+                Character.getNumericValue(tactics[tactic][2]),
+                Character.getNumericValue(tactics[tactic][4])
             )
         }
         val players = mutableListOf<Player>()
         for (i in 0..10) {
             when(i) {
-                0 -> players.add(Player(position.get(i), position.get(i), false, id + i, true))
-                1 -> players.add(Player(position.get(i),  position.get(i), false, id + i, false))
-                2 -> players.add(Player(position.get(i),  position.get(i), false, id + i, false))
-                3 -> players.add(Player(position.get(i),  position.get(i), false, id + i, false))
-                4 -> players.add(Player(position.get(i),  position.get(i), false, id + i, false))
-                5 -> players.add(Player(position.get(i),  position.get(i), false, id + i, false))
-                6 -> players.add(Player(position.get(i),  position.get(i), false, id + i, false))
-                7 -> players.add(Player(position.get(i),  position.get(i), false, id + i, false))
-                8 -> players.add(Player(position.get(i),  position.get(i), false, id + i, false))
-                9 -> players.add(Player(position.get(i),  position.get(i), false, id + i, false))
-                10 -> players.add(Player(position.get(i),  position.get(i), pos1, id + i, false))
+                0 -> players.add(Player(position[i], position[i], false, id + i, true))
+                1 -> players.add(Player(position[i], position[i], false, id + i, false))
+                2 -> players.add(Player(position[i], position[i], false, id + i, false))
+                3 -> players.add(Player(position[i], position[i], false, id + i, false))
+                4 -> players.add(Player(position[i], position[i], false, id + i, false))
+                5 -> players.add(Player(position[i], position[i], false, id + i, false))
+                6 -> players.add(Player(position[i], position[i], false, id + i, false))
+                7 -> players.add(Player(position[i], position[i], false, id + i, false))
+                8 -> players.add(Player(position[i], position[i], false, id + i, false))
+                9 -> players.add(Player(position[i], position[i], false, id + i, false))
+                10 -> players.add(Player(position[i], position[i], pos1, id + i, false))
             }
         }
         return players
@@ -185,7 +184,8 @@ object Tactics {
     fun compareFields(field1: Field?, field2: Field?) : Boolean {
         var state = false
         if(field1 != null && field2 != null && field1.column != null && field1.row != null &&
-            field1.column.equals(field2.column) && field1.row.equals(field2.row)) {
+            field1.column!! == field2.column && field1.row!! == field2.row
+        ) {
             state = true
         }
         return state

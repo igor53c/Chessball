@@ -1,6 +1,5 @@
 package com.igorp.chessball.ui.start
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -9,7 +8,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -228,7 +226,7 @@ fun StartScreen(
                 }
             )
         }
-        val isWrited = viewModel.isWrited.observeAsState().value
+        val isWrited = viewModel.isWrited.value
         Button(
             onClick = {
                 viewModel.searchingForAnOpponent(

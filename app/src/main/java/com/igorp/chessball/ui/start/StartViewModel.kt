@@ -1,8 +1,7 @@
 package com.igorp.chessball.ui.start
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.ktx.database
@@ -26,23 +25,22 @@ class StartViewModel @Inject constructor(
 
     val database = Firebase.database.reference
 
-    private val _isWrited = MutableLiveData<Boolean>()
-    var isWrited: LiveData<Boolean> = _isWrited
+    var isWrited: MutableState<Boolean?> = mutableStateOf(null)
 
-    var games = listOf<Game>()
+    private var games = listOf<Game>()
 
     suspend fun getTeamInfo(id: Int): Resource<TeamDto> {
         return repository.getTeamInfo(id)
     }
 
     fun searchingForAnOpponent(name: String, clubId: Int, selectedTactic: Int) {
-        val competitor = Competitor(Club(null, clubId), Tactics.tactics.get(selectedTactic))
+        val competitor = Competitor(Club(null, clubId), Tactics.tactics[selectedTactic], false, name)
         val ball = Ball(Field(5, 9), Field(5, 9), null, false, true)
-        val game = Game(name, competitor, null, ball)
+        val game = Game(name, competitor, null, ball, null)
 
         viewModelScope.launch {
             games = getListOfGames()
-            if(games.size == 0) {
+            if(games.isEmpty()) {
                 joinTheGameAsCompetitor1(name, selectedTactic, competitor, game)
             } else {
                 var selected = false
@@ -59,7 +57,7 @@ class StartViewModel @Inject constructor(
         }
     }
 
-    fun joinTheGameAsCompetitor2(name: String, selectedTactic: Int, competitor: Competitor, game: Game) {
+    private fun joinTheGameAsCompetitor2(name: String, selectedTactic: Int, competitor: Competitor, game: Game) {
         database.child("players").child(name).setValue(competitor)
             .addOnSuccessListener {
                 competitor.club?.players = Tactics.getPlayers(selectedTactic, false)
@@ -70,15 +68,15 @@ class StartViewModel @Inject constructor(
                         .addOnSuccessListener {
                             myPreference.setIsCompetitor1(false)
                             myPreference.setGame(game.name)
-                            _isWrited.postValue(true)
+                            isWrited.value = true
                         }
-                        .addOnFailureListener { _isWrited.postValue(false) }
+                        .addOnFailureListener { isWrited.value = false }
                 }
             }
-            .addOnFailureListener { _isWrited.postValue(false) }
+            .addOnFailureListener { isWrited.value = false }
     }
 
-    fun joinTheGameAsCompetitor1(name: String, selectedTactic: Int, competitor: Competitor, game: Game) {
+    private fun joinTheGameAsCompetitor1(name: String, selectedTactic: Int, competitor: Competitor, game: Game) {
         database.child("players").child(name).setValue(competitor)
             .addOnSuccessListener {
                 competitor.club?.players = Tactics.getPlayers(selectedTactic, true)
@@ -87,23 +85,22 @@ class StartViewModel @Inject constructor(
                     .addOnSuccessListener {
                         myPreference.setIsCompetitor1(true)
                         myPreference.setGame(name)
-                        _isWrited.postValue(true)
+                        isWrited.value = true
                     }
-                    .addOnFailureListener { _isWrited.postValue(false) }
+                    .addOnFailureListener { isWrited.value = false }
             }
-            .addOnFailureListener { _isWrited.postValue(false) }
+            .addOnFailureListener { isWrited.value = false }
     }
 
-    suspend fun getListOfGames() : List<Game> {
+    private suspend fun getListOfGames(): List<Game> {
         val allGames = database.child("games").get()
 
-        val games = try {
+        return try {
             allGames.await().children.map { snapShot ->
                 snapShot.getValue(Game::class.java)!!
             }
         } catch (exception: Exception) {
             emptyList()
         }
-        return games
     }
 }

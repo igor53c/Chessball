@@ -5,5 +5,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 @IgnoreExtraProperties
 class Competitor (
     val club: Club? = null,
-    val formation: String? = null
+    val formation: String? = null,
+    val played: Boolean? = null,
+    val name: String? = null
 )
