@@ -138,10 +138,7 @@ class GameViewModel @Inject constructor(
                 .child("players").setValue(players)
                 .addOnSuccessListener {  }
                 .addOnFailureListener {  }
-            database.child("games").child(game).child(competitor)
-                .child("played").setValue(true)
-                .addOnSuccessListener {  }
-                .addOnFailureListener {  }
+            setPlayedState(competitor, true)
         }
         if(isOpponentPlayed.value == true) {
             setAllPlayers(players, competitor1Control)
@@ -154,33 +151,43 @@ class GameViewModel @Inject constructor(
         if((isCompetitor1 && competitor1Control) || (!isCompetitor1 && !competitor1Control)) {
             if (game != null) {
                 val pl = setPreviousPositionAsCurrentPosition(opponentTemporaryPlayers.value)
-                database.child("games").child(game).child(competitorOpponent)
-                    .child("club").child("players").setValue(pl)
-                    .addOnSuccessListener {  }
-                    .addOnFailureListener {  }
+                writePlayersInGameb(competitorOpponent, pl)
                 val playersWithBall =
                     checkOverlappingPosition(players, opponentTemporaryPlayers.value)
                 val pl2 = setPreviousPositionAsCurrentPosition(playersWithBall)
-                database.child("games").child(game).child(competitor)
-                    .child("club").child("players").setValue(pl2)
-                    .addOnSuccessListener {  }
-                    .addOnFailureListener {  }
+                writePlayersInGameb(competitor, pl2)
+                setPlayedState(competitor, false)
+                setPlayedState(competitorOpponent, false)
             }
         } else {
             if (game != null) {
                 val pl = setPreviousPositionAsCurrentPosition(players)
-                database.child("games").child(game).child(competitor)
-                    .child("club").child("players").setValue(pl)
-                    .addOnSuccessListener {  }
-                    .addOnFailureListener {  }
+                writePlayersInGameb(competitor, pl)
                 val playersWithBall =
                     checkOverlappingPosition(opponentTemporaryPlayers.value, players)
                 val pl2 = setPreviousPositionAsCurrentPosition(playersWithBall)
-                database.child("games").child(game).child(competitorOpponent)
-                    .child("club").child("players").setValue(pl2)
-                    .addOnSuccessListener {  }
-                    .addOnFailureListener {  }
+                writePlayersInGameb(competitorOpponent, pl2)
+                setPlayedState(competitor, false)
+                setPlayedState(competitorOpponent, false)
             }
+        }
+    }
+
+    private fun writePlayersInGameb(competitor: String, pl: List<Player>) {
+        if (game != null) {
+            database.child("games").child(game).child(competitor)
+                .child("club").child("players").setValue(pl)
+                .addOnSuccessListener {  }
+                .addOnFailureListener {  }
+        }
+    }
+
+    private fun setPlayedState(competitor: String, state : Boolean) {
+        if (game != null) {
+            database.child("games").child(game).child(competitor)
+                .child("played").setValue(state)
+                .addOnSuccessListener {  }
+                .addOnFailureListener {  }
         }
     }
 
@@ -194,17 +201,25 @@ class GameViewModel @Inject constructor(
 
     private fun checkOverlappingPosition(
         playersWithBall: List<Player>, playersWithoutBall: List<Player>) : List<Player> {
-        for(playerWithBall in playersWithBall) {
+        var returnList = playersWithBall
+        for((num, playerWithBall) in playersWithBall.withIndex()) {
             for(playerWithoutBall in playersWithoutBall) {
                 if(compareFields(playerWithBall.currentPosition,
                         playerWithoutBall.currentPosition)) {
-                    playerWithBall.currentPosition?.column = playerWithBall.previousPosition?.column
-                    playerWithBall.currentPosition?.row = playerWithBall.previousPosition?.row
-                    //checkOverlappingPosition()
+                    returnList[num].currentPosition?.column =
+                        returnList[num].previousPosition?.column
+                    returnList[num].currentPosition?.row =
+                        returnList[num].previousPosition?.row
+                    var list = returnList.toMutableList()
+                    list.removeAt(num)
+                    val list2 = listOf(returnList[num])
+                    list = checkOverlappingPosition(list, list2).toMutableList()
+                    list.add(num, returnList[num])
+                    returnList = list
                 }
             }
         }
-        return playersWithBall
+        return returnList
     }
 
     fun setTemporaryBall(ball: Ball) {
